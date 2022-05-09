@@ -1,0 +1,42 @@
+package com.example.demo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+
+@RestController
+@RequestMapping("/person")
+
+public class PersonController {
+
+    @Autowired
+    private PersonService personService;
+
+    @PostMapping("/save")
+    public Mono<Void> post(@RequestBody Mono<Person> personMono) {
+        return personService.insert(personMono);
+    }
+
+    @GetMapping("/{id}")
+    public Mono<Person> getPerson(@PathVariable("id") String id) {
+        return personService.getPerson(id);
+    }
+
+    @PutMapping("update/{id}")
+    public Mono<Person> update(@RequestBody Mono<Person> personMono, @PathVariable String id) {
+        return personService.update(personMono, id);
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<Void> delete(@PathVariable("id") String id) {
+        return personService.delete(id);
+    }
+
+    @GetMapping
+    public Flux<Person> list() {
+        return personService.listAll();
+    }
+
+}
